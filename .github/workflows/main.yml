@@ -1,0 +1,21 @@
+name: Install Dependencies
+
+on:
+  push:
+    branches:
+      - main  # Remplacez par le nom de votre branche principale
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9  # Remplacez par la version de Python que vous utilisez
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt

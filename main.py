@@ -25,7 +25,7 @@ def get_donnees():
     return jsonify(donnees)
 
 ### Tableau pour le Dashboard
-st.title('Cheikh Tidiane Diagne')
+st.title('Bienvenue')
 st.subheader('Tableau')
 st.dataframe(donnees)
 

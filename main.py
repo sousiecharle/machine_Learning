@@ -17,4 +17,4 @@ merged_data = pd.merge(merged_data, achats, on="cookie_id")
 async def get_data():
     return JSONResponse(content=merged_data.to_dict(orient="records")) # Retourne les données au format JSON
 if _name_ == "_main_":
-    uuvicorn.run(app,host="127.0.0.1",port=8000)
+    uvicorn.run(app,host="127.0.0.1",port=8000)

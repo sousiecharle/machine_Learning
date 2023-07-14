@@ -5,11 +5,20 @@ import plotly
 import plotly.express as px
 import plotly.graph_objects as go
 
+
 st.title("Bienvenue sur l'application de Sié Charles SOU !")
 st.write("Je vous souhaite bon visionnage!")
 
+
 data = None
 url_api = "http://localhost:8000/charlesapi/data"
+try:
+    response = requests.get(url_api)
+    # Traiter les données de réponse ici
+except requests.exceptions.ConnectionError as e:
+    print("Erreur de connexion à l'API :", e)
+except Exception as e:
+    print("Une erreur s'est produite :", e)
 
 # Fonction pour appeler l'API et obtenir les données
 def get_data_from_api():

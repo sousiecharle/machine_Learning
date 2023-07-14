@@ -3,4 +3,4 @@ fastapi
 streamlit
 plotly
 plotly.express
-unvicorn
+uvicorn

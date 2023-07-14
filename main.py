@@ -1,20 +1,67 @@
-from fastapi import FastAPI
-from fastapi.responses import JSONResponse
+import streamlit as st
 import pandas as pd
+from flask import Flask, jsonify
+import requests
+import plotly.express as px
+import plotly.graph_objects as go
 
-app = FastAPI()
+st.title("Bienvenue sur l'application SIE CHARLES SOU")
 
-# Charger les données et les fusionner
-clics = pd.read_csv("clics.csv")
-impressions = pd.read_csv("impressions.csv")
-achats = pd.read_csv("achats.csv")
+impressions_df = pd.read_csv('impressions.csv')
+clics_df = pd.read_csv('clics.csv')
+achats_df = pd.read_csv('achats.csv')
 
-merged_data = pd.merge(clics, impressions, on="cookie_id")
-merged_data = pd.merge(merged_data, achats, on="cookie_id")
+### Fusion des données
+
+donnees_fusionnees = pd.merge(impressions_df, clics_df, on='cookie_id')
+donnees = pd.merge(donnees_fusionnees, achats_df, on='cookie_id')
 
 
-@app.get("/charlesapi/data")
-async def get_data():
-    return JSONResponse(content=merged_data.to_dict(orient="records")) # Retourne les données au format JSON
-if _name_ == "_main_":
-    uvicorn.run(app,host="127.0.0.1",port=8000)
+
+#Route API pour avoir les données
+app = Flask(__name__)
+@app.route('/api/donnees', methods=['GET'])
+def get_donnees():
+    return jsonify(donnees)
+
+### Tableau pour le Dashboard
+st.title('Cheikh Tidiane Diagne')
+st.subheader('Tableau')
+st.dataframe(donnees)
+
+df = pd.DataFrame(donnees)
+### Chiffre d'affaire
+chiffre_affaires = df['price'].sum()
+st.write(f"<span style='color:red; font-size:40px;'>Chiffre d'affaires : {chiffre_affaires} € </span>", unsafe_allow_html=True)
+
+## Box plot
+fig = px.box(df, x='product_id', y='age')
+fig.update_layout(
+    xaxis_title='Produits',
+    yaxis_title="Âge",
+    title="Relation entre l'âge et les produits")
+st.plotly_chart(fig)
+
+fig1 = px.histogram(df, x='campaign_id' , y='price')
+fig1.update_layout(
+    xaxis_title='campaigne',
+    yaxis_title="price",
+    title="Les ventes en fonctions des campagnes")
+st.plotly_chart(fig1)
+
+# Entonnoir
+nb_impressions = df['timestamp'].sum()
+nb_clics = df['timestamp_x'].sum()
+nb_achats = df['timestamp_y'].sum()
+
+fig2 = go.Figure(
+    go.Funnel(
+        y=['Impressions', 'Clics', 'Achats'],
+        x=[nb_impressions, nb_clics, nb_achats]
+    )
+)
+
+st.plotly_chart(fig2)
+if __name__ == '__dashboard_tuto__':
+    app.run(debug=True)
+

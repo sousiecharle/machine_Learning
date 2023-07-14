@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import pandas as pd
-import unvicorn
+import uvicorn
 
 app = FastAPI()
 

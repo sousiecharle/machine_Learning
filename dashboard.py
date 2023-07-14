@@ -16,7 +16,7 @@ merged_data = pd.merge(merged_data, achats, on="cookie_id")
 @app.get("/charlesapi/data")
 async def get_data():
     return JSONResponse(content=merged_data.to_dict(orient="records")) # Retourne les données au format JSON
-if _name_ == "_main_":
+if _dashboard_ == "_main_":
     uvicorn.run(app,host="127.0.0.1",port=8000)
 
 import streamlit as st
